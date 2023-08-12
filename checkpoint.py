@@ -16,7 +16,12 @@ def Ret_Pregunta01():
     Pista: averiguar la funcion Shape
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    data_frame = pd.read_csv('datasets\Fuentes_Consumo_Energia.csv')
+    cantidad_colombia = data_frame[data_frame['Entity'] == 'Colombia'].shape[0]
+    cantidad_mexico = data_frame[data_frame['Entity'] == 'Mexico'].shape[0]
+    return cantidad_colombia, cantidad_mexico
+
+    
 
 def Ret_Pregunta02():
     '''
@@ -26,7 +31,12 @@ def Ret_Pregunta02():
     retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    
+    data_frame = pd.read_csv('datasets/Fuentes_Consumo_Energia.csv')
+    columnas_eliminadas = ['Code', 'Entity']
+    data_frame = data_frame.drop(columns=columnas_eliminadas)
+    cantidad_columnas = data_frame.shape[1]
+    return cantidad_columnas
 
 def Ret_Pregunta03():
     '''
@@ -36,7 +46,11 @@ def Ret_Pregunta03():
     retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+
+    data_frame = pd.read_csv('datasets/Fuentes_Consumo_Energia.csv')
+    cantidad_registros = data_frame['Year'].count()
+    return cantidad_registros
+    
 
 def Ret_Pregunta04():
     '''
@@ -54,7 +68,21 @@ def Ret_Pregunta04():
     redondeado a 2 decimales, retornando ese valor en un dato de tipo float.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+
+    data_frame = pd.read_csv('datasets/Fuentes_Consumo_Energia.csv')
+    
+    columnas_ej = [col for col in data_frame.columns if col.endswith("_EJ")]
+    for col in columnas_ej:
+        data_frame[col.replace("_EJ", "_TWh")] = data_frame[col] / 277.778
+    
+    data_frame['Consumo_Total'] = data_frame[[col for col in data_frame.columns if col.endswith("_TWh")]].sum(axis=1)
+    
+    consumo_total = data_frame[(data_frame['Entity'] == 'World') & (data_frame['Year'] == 2019)]['Consumo_Total'].sum()
+    
+    return round(consumo_total, 2)
+
+
+    
 
 def Ret_Pregunta05():
     '''
@@ -64,7 +92,13 @@ def Ret_Pregunta05():
     para la entidad 'Europe' retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    #archivo = 'datasets/Fuentes_Consumo_Energia.csv'
+    data_frame = pd.read_csv('datasets/Fuentes_Consumo_Energia.csv')
+
+    datos_europa = data_frame[data_frame['Entity'] == 'Europe']
+    anio_mayor = datos_europa.loc[datos_europa['Hydro_Generation_TWh'].idxmax()]['Year']
+
+    return int(anio_mayor)
 
 def Ret_Pregunta06(m1, m2, m3):
     '''
@@ -81,7 +115,11 @@ def Ret_Pregunta06(m1, m2, m3):
             False            -> Valor devuelto por la función en este ejemplo
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    try:
+        np.dot(np.dot(m1,m2),m3)
+        return True
+    except ValueError:
+        return False
 
 def Ret_Pregunta07():
     '''
@@ -91,7 +129,15 @@ def Ret_Pregunta07():
     devolver la suma de los valores de esta, con 4 decimales después del punto, redondeado.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    #archivo = 'datasets/GGAL - Cotizaciones historicas.csv'
+    '''
+        data_frame = pd.read_csv('datasets/GGAL - Cotizaciones historicas.csv')
+    suma_maximos = round(data_frame['maximo'].sum(),4)
+    return suma_maximos
+resultado_suma_maximos = Ret_Pregunta07
+print(f'La suma de la columna maximos con 4 decimales es: {resultado_suma_maximos}')
+    '''
+    
 
 def Ret_Pregunta08():
     '''
@@ -101,15 +147,33 @@ def Ret_Pregunta08():
     retornando ese valor en un dato de tipo entero.
     '''
     #Tu código aca:
-    #return 'Funcion incompleta'
+
+    data_frame = pd.read_csv('datasets/Fuentes_Consumo_Energia.csv')
+    
+    cantidad_entidades = data_frame['Entity'].nunique()
+    
+    return cantidad_entidades
+
+
+
+    
 
 def Ret_Pregunta09():
     '''
     Debes utilizar Pandas para ingestar en un objeto Dataframe el contenido del archivo provisto
     "datasets/Tabla1_ejercicio.csv" y "datasets/Tabla2_ejercicio.csv".
-    Esta función debe retornar: score_promedio_femenino y score_promedio_masculino en formato tupla, teniendo en cuenta que no debe haber valores repetidos.'''
+    Esta función debe retornar: score_promedio_femenino y score_promedio_masculino en formato tupla,
+    teniendo en cuenta que no debe haber valores repetidos.'''
     #Tu código aca:
-    #return 'Funcion incompleta'
+    tabla1 = pd.read_csv('datasets/Tabla1_ejercicio.csv')
+    tabla2 = pd.read_csv('datasets/Tabla2_ejercicio.csv')
+
+    tabla_combinada = pd.concat([tabla1,tabla2], ignore_index=True)
+    tabla_combinada = tabla_combinada.drop_duplicates()
+
+    score_promedio_femenino = tabla_combinada[tabla_combinada['Sex']=='F']['Score'].mean()
+    score_promedio_masculino = tabla_combinada[tabla_combinada['Sex']=='M']['Score'].mean()
+    return score_promedio_femenino,score_promedio_masculino
 
 def Ret_Pregunta10(lista):
     '''
@@ -125,4 +189,5 @@ def Ret_Pregunta10(lista):
             3    -> Debe ser el valor devuelto por la función Ret_Pregunta10() en este ejemplo
     '''
     #Tu código aca:
+
     #return 'Funcion incompleta
